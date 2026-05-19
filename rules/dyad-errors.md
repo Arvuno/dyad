@@ -30,6 +30,7 @@ Prefer **`DyadError`** over growing `FILTERED_EXCEPTION_MESSAGES` in `telemetry.
 
 - **`createTypedHandler` / `createLoggedTypedHandler`** rethrow the original error after telemetry — `DyadError` is preserved.
 - **`createLoggedHandler` (`safe_handle.ts`)** rethrows `DyadError` unchanged so the renderer keeps `instanceof DyadError`.
+- When changing a main-process utility from swallowing/logging failures to throwing `DyadError`, audit non-IPC callers such as `app.whenReady()` startup, deep-link handlers, and consent callbacks. These are outside typed handler boundaries, so wrap best-effort writes or surface an explicit dialog instead of letting an unhandled rejection block `createWindow()` or send a success event.
 
 ## Migration
 
